@@ -6,13 +6,9 @@
 package trabalho01;
 
 import java.awt.Color;
-import java.awt.Container;
-import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import static java.awt.image.ImageObserver.ALLBITS;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,10 +19,10 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.Random;
 
 /**
  *
@@ -111,57 +107,73 @@ public class ImagemPBM extends javax.swing.JFrame {
 
     /* variaveis globais */
     BufferedImage imagemOriginal, imagemAuxiliar;
+    private static final Random rand = new Random();
+    /* vetor de letras */
+    private static final char[] letras = "abcdefghijlmnopqrstuvxz".toCharArray();
     
     private void btnBinariaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBinariaActionPerformed
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("PBM", "pbm");
         chooser.setFileFilter(filter);
-        chooser.setDialogTitle("Abrir Imagem");
+        chooser.setDialogTitle("Abrir Imagem Binária");
         int op = chooser.showOpenDialog(this);
         if(op == JFileChooser.APPROVE_OPTION) {  
             File arq = chooser.getSelectedFile();  
             String path = arq.toString();
             try {
                 Scanner scan = new Scanner(new File(path)).useDelimiter("\\n");
-                String aut = null, desc = null, dimensao = null, linha = null;
+                String autenticacao = null, descricao = null, dimensao = null, linha = null;
                 int linhas = 0, colunas = 0, j = 0;
                 
                 if (scan.hasNext()) {
-                    aut = scan.next();
-                    System.out.println(aut);
-                }
-                if (scan.hasNext()) {
-                    desc = scan.next().substring(2);
-                    System.out.println(desc);
-                }
-                if (scan.hasNext()) {
-                    dimensao = scan.next();
-                    System.out.println(dimensao);
-                    String[] corte = dimensao.split(" ");
-                    colunas = Integer.parseInt(corte[0].trim());
-                    linhas = Integer.parseInt(corte[1].trim());
-                }
-                while (scan.hasNext()) {
-                    linha = scan.next();
-                    System.out.println(linha);
-                    String[] corte = linha.split(" ");
-                    for (int i = 0; i < colunas; i++) {
-                        if (Integer.parseInt(corte[i].trim()) == 1)
-                            //imagemAuxiliar.setRGB(i, j, 0);
-                            System.out.println("Preto");
-                        else 
-                            //imagemAuxiliar.setRGB(i, j, 255);
-                            System.out.println("Branco");
+                    autenticacao = scan.next();
+                    //System.out.println(aut);
+                    if (autenticacao.trim().equals("P1")) {
+                        if (scan.hasNext()) {
+                            descricao = scan.next().substring(2);
+                            //System.out.println(desc);
+                            JOptionPane.showMessageDialog(null, "Descrição da imagem: " + descricao);
+                        }
+                        if (scan.hasNext()) {
+                            dimensao = scan.next();
+                            //System.out.println(dimensao);
+                            String[] corte = dimensao.split(" ");
+                            colunas = Integer.parseInt(corte[0].trim());
+                            linhas = Integer.parseInt(corte[1].trim());
+                        }
+                        
+                        BufferedImage buffer = new BufferedImage(colunas, linhas, BufferedImage.TYPE_INT_RGB);
+                        
+                        while (scan.hasNext()) {
+                            linha = scan.next();
+                            //System.out.println(linha);
+                            String[] corte = linha.split(" ");
+                            Color preto = new Color(0, 0, 0);
+                            Color branco = new Color(255, 255, 255);
+                            for (int i = 0; i < colunas; i++) {
+                                if (Integer.parseInt(corte[i].trim()) == 1) {
+                                    buffer.setRGB(i, j, preto.getRGB());
+                                }
+                                else {
+                                    buffer.setRGB(i, j, branco.getRGB());
+                                }
+                            }
+                            j++;
+                        }
+                        imagemAuxiliar = buffer;
+                        ImageIcon icon = new ImageIcon(imagemAuxiliar.getScaledInstance(painelImagem.getWidth(), 
+                                painelImagem.getHeight(), java.awt.Image.SCALE_SMOOTH));
+                        lblImagem.setIcon(icon);
+                        
+                        lblDescricao.setText("Dados da imagem:      Altura: " + colunas + 
+                                " pixels      Largura: " + linhas + " pixels.");
+                    } else { 
+                        JOptionPane.showMessageDialog(null, "Formato de imagem inválido.");
+                        lblImagem.setIcon(null);
+                        lblDescricao.setText("Dados da imagem:");
                     }
-                    j++;
                 }
-                
-                //ImageIcon icon = new ImageIcon(imagemAuxiliar);
-                //lblImagem.setIcon(icon);
-                
-                lblDescricao.setText("Dados da imagem:      Altura: " + colunas + 
-                        " pixels      Largura: " + linhas + " pixels.");
             }
 	    catch(IOException e) {
 		System.out.println("Erro IO Exception! Verifique se o arquivo especificado existe e tente novamente.");
@@ -196,31 +208,40 @@ public class ImagemPBM extends javax.swing.JFrame {
             
             this.imageUpdate(imagemOriginal, ALLBITS, 0, 0, width, height);
             
+            /* gerar nome aleatorio */
+            StringBuilder nome = new StringBuilder();
+            for (int i = 0; i < 6; i++) {
+                int ch = rand.nextInt (letras.length);
+                nome.append (letras [ch]);
+            }
+            
             /* passo 02 :: salvar arquivo pbm */
-            File file = new File("C:/Users/lennon/Documents/NetBeansProjects/ProcessamentoDeImagens/images/nova.pbm");
+            File file = new File("C:/Users/lennon/Documents/NetBeansProjects/ProcessamentoDeImagens/images/" + 
+                    nome.toString() + ".pbm");
             try {
                 FileWriter fw = new FileWriter(file, false);
-                PrintWriter pw = new PrintWriter(fw);
-        
                 /* grava nova linha */
-                pw.println("P1");
-                pw.println("# Trabalho 01 :: Processamento de Imagens :: Lennon - Weverton - Daniel");
-                pw.println(width + " " + height);
-                for (int i = 0; i < width; i++) {
-                    for (int j = 0; j < height; j ++) {
-                        //System.out.println(imagemAuxiliar.getRGB(i, j));
-                        if (imagemAuxiliar.getRGB(j, i) == -1) pw.print("0 ");
-                        else pw.print("1 ");
+                try (PrintWriter pw = new PrintWriter(fw)) {
+                    /* grava nova linha */
+                    pw.println("P1");
+                    pw.println("# Trabalho 01 :: Processamento de Imagens :: Lennon - Weverton - Daniel");
+                    pw.println(width + " " + height);
+                    for (int i = 0; i < width; i++) {
+                        for (int j = 0; j < height; j ++) {
+                            //System.out.println(imagemAuxiliar.getRGB(i, j));
+                            if (imagemAuxiliar.getRGB(j, i) == -1) pw.print("0 ");
+                            else pw.print("1 ");
+                        }
+                        pw.println();
                     }
-                    pw.println();
-                }
 
-                /* limpa escrita */
-                pw.flush();
-                /* fecha escrita */
-                pw.close();
+                    /* limpa escrita */
+                    pw.flush();
+                    /* fecha escrita */
+                }
                 
                 JOptionPane.showMessageDialog(null, "Arquivo salvo com sucesso!");
+                btnExportar.setEnabled(false);
             } catch (IOException ex) {
                 Logger.getLogger(ImagemPBM.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -240,7 +261,8 @@ public class ImagemPBM extends javax.swing.JFrame {
             try {
                 imagemOriginal = ImageIO.read(new File(path));
                 System.out.println("Arquivo aberto com sucesso.");
-                ImageIcon icon = new ImageIcon(imagemOriginal);
+                ImageIcon icon = new ImageIcon(imagemOriginal.getScaledInstance(painelImagem.getWidth(), painelImagem.getHeight(), 
+                        java.awt.Image.SCALE_SMOOTH));
                 lblImagem.setIcon(icon);
                 
                 lblDescricao.setText("Dados da imagem:      Altura: " + imagemOriginal.getHeight() + 
@@ -273,29 +295,20 @@ public class ImagemPBM extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ImagemPBM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ImagemPBM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ImagemPBM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ImagemPBM.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
                     UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(ImagemPBM.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InstantiationException ex) {
-                    Logger.getLogger(ImagemPBM.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(ImagemPBM.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnsupportedLookAndFeelException ex) {
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                     Logger.getLogger(ImagemPBM.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 new ImagemPBM().setVisible(true);
