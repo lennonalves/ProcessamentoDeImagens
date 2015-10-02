@@ -108,12 +108,13 @@ public class ImagemPBM extends javax.swing.JFrame {
     /* variaveis globais */
     BufferedImage imagemOriginal, imagemAuxiliar;
     private static final Random rand = new Random();
+    String destino = "/media/lennonalves/LENNONMKT/bakcup_temp/NetBeansProjects/ProcessamentoDeImagens/images/";
     /* vetor de letras */
     private static final char[] letras = "abcdefghijlmnopqrstuvxz".toCharArray();
     
     private void btnBinariaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBinariaActionPerformed
         // TODO add your handling code here:
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser(destino);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("PBM", "pbm");
         chooser.setFileFilter(filter);
         chooser.setDialogTitle("Abrir Imagem Binária");
@@ -168,6 +169,7 @@ public class ImagemPBM extends javax.swing.JFrame {
                         
                         lblDescricao.setText("Dados da imagem:      Altura: " + colunas + 
                                 " pixels      Largura: " + linhas + " pixels.");
+                        System.out.println("Arquivo " + arq.getName() + " aberto com sucesso.");
                     } else { 
                         JOptionPane.showMessageDialog(null, "Formato de imagem inválido.");
                         lblImagem.setIcon(null);
@@ -216,8 +218,7 @@ public class ImagemPBM extends javax.swing.JFrame {
             }
             
             /* passo 02 :: salvar arquivo pbm */
-            File file = new File("C:/Users/lennon/Documents/NetBeansProjects/ProcessamentoDeImagens/images/" + 
-                    nome.toString() + ".pbm");
+            File file = new File(destino + nome.toString() + ".pbm");
             try {
                 FileWriter fw = new FileWriter(file, false);
                 /* grava nova linha */
@@ -226,8 +227,8 @@ public class ImagemPBM extends javax.swing.JFrame {
                     pw.println("P1");
                     pw.println("# Trabalho 01 :: Processamento de Imagens :: Lennon - Weverton - Daniel");
                     pw.println(width + " " + height);
-                    for (int i = 0; i < width; i++) {
-                        for (int j = 0; j < height; j ++) {
+                    for (int i = 0; i < height; i++) {
+                        for (int j = 0; j < width; j ++) {
                             //System.out.println(imagemAuxiliar.getRGB(i, j));
                             if (imagemAuxiliar.getRGB(j, i) == -1) pw.print("0 ");
                             else pw.print("1 ");
@@ -240,7 +241,8 @@ public class ImagemPBM extends javax.swing.JFrame {
                     /* fecha escrita */
                 }
                 
-                JOptionPane.showMessageDialog(null, "Arquivo salvo com sucesso!");
+                System.out.println("Arquivo " + nome.toString() + ".pbm salvo com sucesso.");
+                JOptionPane.showMessageDialog(null, "Arquivo " + nome.toString() + ".pbm salvo com sucesso!");
                 btnExportar.setEnabled(false);
             } catch (IOException ex) {
                 Logger.getLogger(ImagemPBM.class.getName()).log(Level.SEVERE, null, ex);
@@ -250,7 +252,7 @@ public class ImagemPBM extends javax.swing.JFrame {
 
     private void btnComumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComumActionPerformed
         // TODO add your handling code here:
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser(destino);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG ou PNG", "jpg", "png");
         chooser.setFileFilter(filter);
         chooser.setDialogTitle("Abrir Imagem");
@@ -260,7 +262,6 @@ public class ImagemPBM extends javax.swing.JFrame {
             String path = arq.toString();  
             try {
                 imagemOriginal = ImageIO.read(new File(path));
-                System.out.println("Arquivo aberto com sucesso.");
                 ImageIcon icon = new ImageIcon(imagemOriginal.getScaledInstance(painelImagem.getWidth(), painelImagem.getHeight(), 
                         java.awt.Image.SCALE_SMOOTH));
                 lblImagem.setIcon(icon);
@@ -268,6 +269,7 @@ public class ImagemPBM extends javax.swing.JFrame {
                 lblDescricao.setText("Dados da imagem:      Altura: " + imagemOriginal.getHeight() + 
                         " pixels      Largura: " + imagemOriginal.getWidth() + " pixels.");
                 
+                System.out.println("Arquivo " + arq.getName() + " aberto com sucesso.");
                 btnExportar.setEnabled(true);
 	    }
 	    catch(IOException e){
@@ -307,7 +309,8 @@ public class ImagemPBM extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
-                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+                    // UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel"); /* Windows */
+                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel"); /* Linux */
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                     Logger.getLogger(ImagemPBM.class.getName()).log(Level.SEVERE, null, ex);
                 }
