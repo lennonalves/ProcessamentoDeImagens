@@ -49,7 +49,7 @@ public class ImagemPBM extends javax.swing.JFrame {
 
         btnBinaria = new javax.swing.JButton();
         lblDescricao = new javax.swing.JLabel();
-        painelImagem = new javax.swing.JPanel();
+        painelImagem = new javax.swing.JScrollPane();
         lblImagem = new javax.swing.JLabel();
         btnExportar = new javax.swing.JButton();
         btnComum = new javax.swing.JButton();
@@ -75,8 +75,7 @@ public class ImagemPBM extends javax.swing.JFrame {
         getContentPane().add(lblDescricao);
         lblDescricao.setBounds(10, 470, 480, 30);
 
-        painelImagem.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        painelImagem.add(lblImagem);
+        painelImagem.setViewportView(lblImagem);
 
         getContentPane().add(painelImagem);
         painelImagem.setBounds(10, 60, 760, 400);
@@ -108,7 +107,7 @@ public class ImagemPBM extends javax.swing.JFrame {
     /* variaveis globais */
     BufferedImage imagemOriginal, imagemAuxiliar;
     private static final Random rand = new Random();
-    String destino = "/media/lennonalves/LENNONMKT/bakcup_temp/NetBeansProjects/ProcessamentoDeImagens/images/";
+    String destino = "D:/backup_temp/NetBeansProjects/ProcessamentoDeImagens/images";
     /* vetor de letras */
     private static final char[] letras = "abcdefghijlmnopqrstuvxz".toCharArray();
     
@@ -163,8 +162,7 @@ public class ImagemPBM extends javax.swing.JFrame {
                             j++;
                         }
                         imagemAuxiliar = buffer;
-                        ImageIcon icon = new ImageIcon(imagemAuxiliar.getScaledInstance(painelImagem.getWidth(), 
-                                painelImagem.getHeight(), java.awt.Image.SCALE_SMOOTH));
+                        ImageIcon icon = new ImageIcon(imagemAuxiliar);
                         lblImagem.setIcon(icon);
                         
                         lblDescricao.setText("Dados da imagem:      Altura: " + colunas + 
@@ -262,8 +260,7 @@ public class ImagemPBM extends javax.swing.JFrame {
             String path = arq.toString();  
             try {
                 imagemOriginal = ImageIO.read(new File(path));
-                ImageIcon icon = new ImageIcon(imagemOriginal.getScaledInstance(painelImagem.getWidth(), painelImagem.getHeight(), 
-                        java.awt.Image.SCALE_SMOOTH));
+                ImageIcon icon = new ImageIcon(imagemOriginal);
                 lblImagem.setIcon(icon);
                 
                 lblDescricao.setText("Dados da imagem:      Altura: " + imagemOriginal.getHeight() + 
@@ -309,8 +306,8 @@ public class ImagemPBM extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
-                    // UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel"); /* Windows */
-                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel"); /* Linux */
+                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel"); /* Windows */
+                    //UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel"); /* Linux */
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                     Logger.getLogger(ImagemPBM.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -325,6 +322,6 @@ public class ImagemPBM extends javax.swing.JFrame {
     private javax.swing.JButton btnExportar;
     private javax.swing.JLabel lblDescricao;
     private javax.swing.JLabel lblImagem;
-    private javax.swing.JPanel painelImagem;
+    private javax.swing.JScrollPane painelImagem;
     // End of variables declaration//GEN-END:variables
 }
