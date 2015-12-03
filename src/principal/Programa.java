@@ -13,7 +13,9 @@ import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.ConvolveOp;
 import static java.awt.image.ImageObserver.ALLBITS;
+import java.awt.image.Kernel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.filechooser.*;
@@ -69,6 +71,15 @@ public class Programa extends javax.swing.JFrame {
         menuGamma = new javax.swing.JMenu();
         gamaMenos = new javax.swing.JMenuItem();
         gamaMais = new javax.swing.JMenuItem();
+        btnFiltros = new javax.swing.JMenu();
+        btnFiltroPassaBaixas = new javax.swing.JMenuItem();
+        btnPassaAltas = new javax.swing.JMenuItem();
+        btnGaussiano = new javax.swing.JMenuItem();
+        btnBlur = new javax.swing.JMenuItem();
+        btnSharpen = new javax.swing.JMenuItem();
+        btnLaplaciano = new javax.swing.JMenuItem();
+        btnMorfologia = new javax.swing.JMenu();
+        btnLimiarização = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("PDI | Processamento de Imagens");
@@ -278,6 +289,70 @@ public class Programa extends javax.swing.JFrame {
 
         menuOpcoes.add(menuOperacoes);
 
+        btnFiltros.setText("Filtros");
+
+        btnFiltroPassaBaixas.setText("Passa-baixas");
+        btnFiltroPassaBaixas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFiltroPassaBaixasActionPerformed(evt);
+            }
+        });
+        btnFiltros.add(btnFiltroPassaBaixas);
+
+        btnPassaAltas.setText("Passa-altas");
+        btnPassaAltas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPassaAltasActionPerformed(evt);
+            }
+        });
+        btnFiltros.add(btnPassaAltas);
+
+        btnGaussiano.setText("Gaussiano");
+        btnGaussiano.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGaussianoActionPerformed(evt);
+            }
+        });
+        btnFiltros.add(btnGaussiano);
+
+        btnBlur.setText("Blur");
+        btnBlur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBlurActionPerformed(evt);
+            }
+        });
+        btnFiltros.add(btnBlur);
+
+        btnSharpen.setText("Sharpen");
+        btnSharpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSharpenActionPerformed(evt);
+            }
+        });
+        btnFiltros.add(btnSharpen);
+
+        btnLaplaciano.setText("Operador Laplaciano");
+        btnLaplaciano.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLaplacianoActionPerformed(evt);
+            }
+        });
+        btnFiltros.add(btnLaplaciano);
+
+        menuOpcoes.add(btnFiltros);
+
+        btnMorfologia.setText("Morfologia");
+
+        btnLimiarização.setText("Limirização");
+        btnLimiarização.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimiarizaçãoActionPerformed(evt);
+            }
+        });
+        btnMorfologia.add(btnLimiarização);
+
+        menuOpcoes.add(btnMorfologia);
+
         setJMenuBar(menuOpcoes);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -299,8 +374,8 @@ public class Programa extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAbrirActionPerformed
-
-        JFileChooser chooser = new JFileChooser();
+        String destino = "C:/Users/lennon/Documents/NetBeansProjects/ProcessamentoDeImagens/images/";
+        JFileChooser chooser = new JFileChooser(destino);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG, PNG & GIF Images", "jpg", "png", "gif");
         chooser.setFileFilter(filter);
         chooser.setDialogTitle("Abrir Imagem");
@@ -836,6 +911,174 @@ public class Programa extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_menu2CinzasActionPerformed
 
+    private void btnFiltroPassaBaixasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltroPassaBaixasActionPerformed
+        // TODO add your handling code here:
+        if (imagemOriginal != null) {
+//        int width = imagemOriginal.getWidth(), height = imagemOriginal.getHeight(), soma;
+//        
+//        for (int i = 1; i < width - 1; i++) {
+//            for (int j = 1; j < height - 1; j++) {
+//                soma = 0;
+//                Color c1 = new Color(imagemOriginal.getRGB(i-1, j-1));
+//                soma += (-1 * c1.getRed());
+//                Color c2 = new Color(imagemOriginal.getRGB(i, j-1));
+//                soma += (-1 * c2.getRed());
+//                Color c3 = new Color(imagemOriginal.getRGB(i+1, j-1));
+//                soma += (-1 * c3.getRed());
+//                Color c4 = new Color(imagemOriginal.getRGB(i-1, j));
+//                soma += (-1 * c4.getRed());
+//                Color c5 = new Color(imagemOriginal.getRGB(i, j));
+//                soma += (-1 * c5.getRed());
+//                Color c6 = new Color(imagemOriginal.getRGB(i+1, j));
+//                soma += (-1 * c6.getRed());
+//                Color c7 = new Color(imagemOriginal.getRGB(i-1, j+1));
+//                soma += (-1 * c7.getRed());
+//                Color c8 = new Color(imagemOriginal.getRGB(i, j+1));
+//                soma += (-1 * c8.getRed());
+//                Color c9 = new Color(imagemOriginal.getRGB(i+1, j+1));
+//                soma += (-1 * c9.getRed());
+//                if (soma < 0) soma = 0;
+//                if (soma > 255) soma = 255;
+//                Color color = new Color(soma, soma, soma);
+//                imagemAuxiliar.setRGB(i, j, color.getRGB());
+//             }
+//        }
+//        
+//        for (int i = 1; i < width - 1; i++) {
+//            for (int j = 1; j < height - 1; j++) {
+//                soma = 0;
+//                for (int x = -1; x <= 1; x++) {
+//                    for (int y = -1; y <= 1; y ++) {
+//                        Color cor = new Color(imagemOriginal.getRGB(i+x, j+y));
+//                        soma += cor.getRed();
+//                    }
+//                }
+//            }
+//        }
+        
+            imagemAuxiliar = new BufferedImage(imagemOriginal.getWidth(), imagemOriginal.getHeight(), imagemOriginal.getType());
+            float data[] = {    1.0f/9.0f, 1.0f/9.0f, 1.0f/9.0f,
+                                1.0f/9.0f, 1.0f/9.0f, 1.0f/9.0f,
+                                1.0f/9.0f, 1.0f/9.0f, 1.0f/9.0f      };
+            Kernel kernel = new Kernel(3, 3, data);
+            ConvolveOp convolve = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+            convolve.filter(imagemOriginal, imagemAuxiliar);
+            imagemOriginal = imagemAuxiliar;
+            ImageIcon icon = new ImageIcon(imagemOriginal);
+            img.setIcon(icon);
+
+            System.out.println("Filtro passa-baixas aplicado na imagem.");
+        }
+    }//GEN-LAST:event_btnFiltroPassaBaixasActionPerformed
+
+    private void btnPassaAltasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPassaAltasActionPerformed
+        // TODO add your handling code here:
+        if (imagemOriginal != null) {
+            imagemAuxiliar = new BufferedImage(imagemOriginal.getWidth(), imagemOriginal.getHeight(), imagemOriginal.getType());
+            float data[] = {    -1.0f/9.0f, -1.0f/9.0f, -1.0f/9.0f,
+                                -1.0f/9.0f,  8.0f/9.0f, -1.0f/9.0f,
+                                -1.0f/9.0f, -1.0f/9.0f, -1.0f/9.0f      };
+            Kernel kernel = new Kernel(3, 3, data);
+            ConvolveOp convolve = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+            convolve.filter(imagemOriginal, imagemAuxiliar);
+            imagemOriginal = imagemAuxiliar;
+            ImageIcon icon = new ImageIcon(imagemOriginal);
+            img.setIcon(icon);
+
+            System.out.println("Filtro passa-altas aplicado na imagem.");
+        }
+    }//GEN-LAST:event_btnPassaAltasActionPerformed
+
+    private void btnGaussianoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGaussianoActionPerformed
+        // TODO add your handling code here:
+        if (imagemOriginal != null) {
+            imagemAuxiliar = new BufferedImage(imagemOriginal.getWidth(), imagemOriginal.getHeight(), imagemOriginal.getType());
+            float data[] = {    1.0f/16.0f, 2.0f/16.0f, 1.0f/16.0f,
+                                2.0f/16.0f, 4.0f/16.0f, 2.0f/16.0f,
+                                1.0f/16.0f, 2.0f/16.0f, 1.0f/16.0f      };
+            Kernel kernel = new Kernel(3, 3, data);
+            ConvolveOp convolve = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+            convolve.filter(imagemOriginal, imagemAuxiliar);
+            imagemOriginal = imagemAuxiliar;
+            ImageIcon icon = new ImageIcon(imagemOriginal);
+            img.setIcon(icon);
+
+            System.out.println("Filtro gaussiano aplicado na imagem.");
+        }
+    }//GEN-LAST:event_btnGaussianoActionPerformed
+
+    private void btnLaplacianoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLaplacianoActionPerformed
+        // TODO add your handling code here:
+        if (imagemOriginal != null) {
+            imagemAuxiliar = new BufferedImage(imagemOriginal.getWidth(), imagemOriginal.getHeight(), imagemOriginal.getType());
+            float data[] = {    0.0f, -1.0f, 0.0f,
+                                -1.0f,  4.0f, -1.0f,
+                                0.0f, -1.0f, 0.0f      };
+            Kernel kernel = new Kernel(3, 3, data);
+            ConvolveOp convolve = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+            convolve.filter(imagemOriginal, imagemAuxiliar);
+            imagemOriginal = imagemAuxiliar;
+            ImageIcon icon = new ImageIcon(imagemOriginal);
+            img.setIcon(icon);
+
+            System.out.println("Operador laplaciano aplicado na imagem.");
+        }
+    }//GEN-LAST:event_btnLaplacianoActionPerformed
+
+    private void btnBlurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBlurActionPerformed
+        // TODO add your handling code here:
+        if (imagemOriginal != null) {
+            imagemAuxiliar = new BufferedImage(imagemOriginal.getWidth(), imagemOriginal.getHeight(), imagemOriginal.getType());
+            float data[] = {    0.0625f, 0.125f, 0.0625f,
+                                0.125f,  0.25f, 0.125f,
+                                0.0625f, 0.125f, 0.625f      };
+            Kernel kernel = new Kernel(3, 3, data);
+            ConvolveOp convolve = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+            convolve.filter(imagemOriginal, imagemAuxiliar);
+            imagemOriginal = imagemAuxiliar;
+            ImageIcon icon = new ImageIcon(imagemOriginal);
+            img.setIcon(icon);
+
+            System.out.println("Filtro blur aplicado na imagem.");
+        }
+    }//GEN-LAST:event_btnBlurActionPerformed
+
+    private void btnSharpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSharpenActionPerformed
+        // TODO add your handling code here:
+        if (imagemOriginal != null) {
+            imagemAuxiliar = new BufferedImage(imagemOriginal.getWidth(), imagemOriginal.getHeight(), imagemOriginal.getType());
+            float data[] = {    -1.0f, -1.0f, -1.0f,
+                                -1.0f,  9.0f, -1.0f,
+                                -1.0f, -1.0f, -1.0f      };
+            Kernel kernel = new Kernel(3, 3, data);
+            ConvolveOp convolve = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+            convolve.filter(imagemOriginal, imagemAuxiliar);
+            imagemOriginal = imagemAuxiliar;
+            ImageIcon icon = new ImageIcon(imagemOriginal);
+            img.setIcon(icon);
+
+            System.out.println("Filtro sharpen aplicado na imagem.");
+        }
+    }//GEN-LAST:event_btnSharpenActionPerformed
+
+    private void btnLimiarizaçãoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimiarizaçãoActionPerformed
+        // TODO add your handling code here:
+        if (imagemOriginal != null) {
+            int width = imagemOriginal.getWidth(), height = imagemOriginal.getHeight();
+            for (int i = 0; i < width; i++)
+                for (int j = 0; j < height; j++) {
+                    Color c = new Color(imagemOriginal.getRGB(i, j));
+                    int y = (int) (0.299 * c.getRed() + 0.587 * c.getGreen() + 0.114 * c.getBlue());
+                    if (y < 128) y = 0;
+                    else y = 255;
+                    
+                    Color color = new Color(y, y, y);
+                    imagemOriginal.setRGB(i, j, color.getRGB());
+                }
+        this.imageUpdate(imagemOriginal, ALLBITS, 0, 0, width, height);
+        }
+    }//GEN-LAST:event_btnLimiarizaçãoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -868,8 +1111,8 @@ public class Programa extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try { 
-                    // UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel"); /* Windows */
-                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel"); /* Linux */
+                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel"); /* Windows */
+//                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel"); /* Linux */
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                     Logger.getLogger(Programa.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -878,6 +1121,15 @@ public class Programa extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem btnBlur;
+    private javax.swing.JMenuItem btnFiltroPassaBaixas;
+    private javax.swing.JMenu btnFiltros;
+    private javax.swing.JMenuItem btnGaussiano;
+    private javax.swing.JMenuItem btnLaplaciano;
+    private javax.swing.JMenuItem btnLimiarização;
+    private javax.swing.JMenu btnMorfologia;
+    private javax.swing.JMenuItem btnPassaAltas;
+    private javax.swing.JMenuItem btnSharpen;
     private javax.swing.JMenuItem gamaMais;
     private javax.swing.JMenuItem gamaMenos;
     private javax.swing.JLabel img;

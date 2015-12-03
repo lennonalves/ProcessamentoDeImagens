@@ -75,6 +75,7 @@ public class ImagemPBM extends javax.swing.JFrame {
         getContentPane().add(lblDescricao);
         lblDescricao.setBounds(10, 470, 480, 30);
 
+        lblImagem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         painelImagem.setViewportView(lblImagem);
 
         getContentPane().add(painelImagem);
@@ -107,7 +108,7 @@ public class ImagemPBM extends javax.swing.JFrame {
     /* variaveis globais */
     BufferedImage imagemOriginal, imagemAuxiliar;
     private static final Random rand = new Random();
-    String destino = "D:/backup_temp/NetBeansProjects/ProcessamentoDeImagens/images";
+    String destino = "C:/Users/lennon/Documents/NetBeansProjects/ProcessamentoDeImagens/images/";
     /* vetor de letras */
     private static final char[] letras = "abcdefghijlmnopqrstuvxz".toCharArray();
     

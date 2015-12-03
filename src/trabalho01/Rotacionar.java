@@ -6,7 +6,6 @@
 package trabalho01;
 
 import java.awt.image.BufferedImage;
-import static java.awt.image.ImageObserver.ALLBITS;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -17,7 +16,6 @@ import javax.swing.JFileChooser;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.util.Random;
 
 /**
  *
@@ -60,6 +58,7 @@ public class Rotacionar extends javax.swing.JFrame {
         getContentPane().add(lblDescricao);
         lblDescricao.setBounds(10, 470, 760, 30);
 
+        lblImagem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         painelImagem.setViewportView(lblImagem);
 
         getContentPane().add(painelImagem);
@@ -99,10 +98,7 @@ public class Rotacionar extends javax.swing.JFrame {
 
     /* variaveis globais */
     BufferedImage imagemOriginal, imagemAuxiliar;
-    private static final Random rand = new Random();
-    String destino = "D:/backup_temp/NetBeansProjects/ProcessamentoDeImagens/images";
-    /* vetor de letras */
-    private static final char[] letras = "abcdefghijlmnopqrstuvxz".toCharArray();
+    String destino = "C:/Users/lennon/Documents/NetBeansProjects/ProcessamentoDeImagens/images/";
     
     private void btnComumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComumActionPerformed
         // TODO add your handling code here:
@@ -156,7 +152,6 @@ public class Rotacionar extends javax.swing.JFrame {
             imagemAuxiliar = buffer;
             ImageIcon icon = new ImageIcon(imagemAuxiliar);
             lblImagem.setIcon(icon);
-            setSize(imagemAuxiliar.getWidth(), imagemAuxiliar.getHeight());
             
             //painelImagem.setSize(imagemAuxiliar.getWidth(), imagemAuxiliar.getHeight());
             
@@ -185,7 +180,7 @@ public class Rotacionar extends javax.swing.JFrame {
             
             imagemAuxiliar = buffer;
             ImageIcon icon = new ImageIcon(imagemAuxiliar);
-            setSize(buffer.getWidth(), buffer.getHeight());
+            lblImagem.setIcon(icon);
             
             //painelImagem.setSize(imagemAuxiliar.getWidth(), imagemAuxiliar.getHeight());
             
